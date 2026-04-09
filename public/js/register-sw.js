@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/service-worker.js').then(r=>console.log('SW:',r.scope)).catch(e=>console.warn('SW fail:',e));});window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.__deferredPrompt=e;});}

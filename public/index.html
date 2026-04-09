@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#0d6e4a"/>
+<meta name="description" content="Maa Grace AI – Powered by AmanTech. Intelligent AI assistant for Ghana and West Africa."/>
+<meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Maa Grace AI"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/logo192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="/logo512.png"/>
+<title>Maa Grace AI – AmanTech</title>
+<link rel="stylesheet" href="/css/main.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          green: { 700:'#0d6e4a', 800:'#064e34', 900:'#033020' },
+          gold:  { 400:'#e8b84b', 500:'#c9a227' }
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-[#0f1117] text-gray-100">
+
+<!-- Toast Container -->
+<div id="app-overlay" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
+<div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
+  <div class="pointer-events-auto"></div>
+</div>
+
+<!-- PWA Install Banner (bottom) -->
+<div id="pwa-banner" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0c1a12] border-t border-green-700/40 px-4 py-3">
+  <div class="max-w-lg mx-auto flex items-center gap-3">
+    <img src="/logo192.png" class="w-10 h-10 rounded-xl" alt="Logo"/>
+    <div class="flex-1">
+      <p class="text-sm font-semibold text-green-300">Install Maa Grace AI</p>
+      <p class="text-xs text-gray-400">Add to home screen for the best experience</p>
+    </div>
+    <button id="pwa-banner-btn" class="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all">Install</button>
+    <button id="pwa-banner-close" class="text-gray-500 hover:text-gray-300 text-xl leading-none ml-1">×</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ AUTH SCREEN ═══════════════════════ -->
+<div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <img src="/logo192.png" class="w-20 h-20 rounded-2xl mx-auto mb-4 shadow-2xl" alt="Maa Grace AI"/>
+      <h1 class="text-2xl font-bold text-white">Maa Grace AI</h1>
+      <p class="text-gray-400 text-sm mt-1">Powered by AmanTech · Built for Ghana</p>
+    </div>
+
+    <!-- Login Box -->
+    <div id="login-box" class="bg-[#161b22] border border-white/8 rounded-2xl p-6 shadow-2xl">
+      <h2 class="text-lg font-semibold mb-5">Sign In</h2>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block">Email</label>
+          <input id="login-user" type="email" autocomplete="username" required placeholder="you@example.com"
+            class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-700/60 transition-colors"/>
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block">Password</label>
+          <input id="login-pass" type="password" autocomplete="current-password" required placeholder="••••••••"
+            class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-700/60 transition-colors"/>
+        </div>
+        <button type="submit" id="login-btn" class="w-full bg-green-700 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-all text-sm">Sign In</button>
+      </form>
+      <p class="text-center text-xs text-gray-500 mt-4">
+        Don't have an account? <button id="show-signup" class="text-green-400 hover:underline">Sign up</button>
+      </p>
+    </div>
+
+    <!-- Sign Up Box -->
+    <div id="signup-box" class="hidden bg-[#161b22] border border-white/8 rounded-2xl p-6 shadow-2xl">
+      <h2 class="text-lg font-semibold mb-5">Create Account</h2>
+      <form id="signup-form" class="space-y-4">
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block">Full Name</label>
+          <input id="signup-user" type="text" required placeholder="Kofi Mensah"
+            class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-700/60 transition-colors"/>
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block">Email</label>
+          <input id="signup-email" type="email" autocomplete="username" required placeholder="you@example.com"
+            class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-700/60 transition-colors"/>
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block">Password</label>
+          <input id="signup-pass" type="password" autocomplete="new-password" required placeholder="Min. 6 characters"
+            class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-700/60 transition-colors"/>
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block">Confirm Password</label>
+          <input id="signup-confirm" type="password" autocomplete="new-password" required placeholder="Repeat password"
+            class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-green-700/60 transition-colors"/>
+        </div>
+        <button type="submit" id="signup-btn" class="w-full bg-green-700 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-all text-sm">Create Account</button>
+      </form>
+      <p class="text-center text-xs text-gray-500 mt-4">
+        Already have an account? <button id="show-login" class="text-green-400 hover:underline">Sign in</button>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ APP SHELL ═══════════════════════ -->
+<div id="app-screen" class="hidden h-screen w-screen flex overflow-hidden">
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div id="sidebar-overlay" class="hidden lg:hidden fixed inset-0 z-40" onclick="document.getElementById('sidebar').classList.add('-translate-x-full');this.classList.add('hidden')"></div>
+
+  <!-- ─── SIDEBAR ─────────────────────────────────────────── -->
+  <aside id="sidebar" class="w-64 flex flex-col h-full shrink-0 -translate-x-full lg:translate-x-0">
+
+    <!-- Logo -->
+    <div class="px-4 py-4 border-b border-white/5 flex items-center gap-3">
+      <img src="/logo192.png" class="w-9 h-9 rounded-xl" alt="Logo"/>
+      <div class="min-w-0 flex-1">
+        <div class="text-sm font-bold text-white truncate">Maa Grace AI</div>
+        <div class="text-xs text-green-400/70">by AmanTech</div>
+      </div>
+      <button id="sidebar-toggle" class="lg:hidden text-gray-500 hover:text-gray-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- New Chat Button -->
+    <div class="px-3 py-3">
+      <button id="new-chat-btn" class="w-full flex items-center gap-2 bg-green-700/20 hover:bg-green-700/30 border border-green-700/30 hover:border-green-600/50 text-green-300 text-sm font-medium px-3 py-2.5 rounded-xl transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        New Chat
+      </button>
+    </div>
+
+    <!-- Thread List -->
+    <div id="thread-list" class="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5 text-sm"></div>
+
+    <!-- Usage -->
+    <div class="px-3 py-3 border-t border-white/5">
+      <div id="usage-container" class="mb-3 text-xs"><div id="usage-bar" class="h-1 bg-green-700/30 rounded-full mt-1"><div class="h-full bg-green-500 rounded-full" style="width:0%"></div></div></div>
+      <button id="upgrade-btn" class="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-gold-500/20 to-yellow-600/20 border border-yellow-600/30 hover:border-yellow-500/50 text-yellow-400 text-xs font-semibold px-3 py-2 rounded-xl transition-all mb-2">
+        ⚡ Upgrade Plan
+      </button>
+      <!-- PWA Install Button -->
+      <button id="pwa-install-btn" class="hidden w-full flex items-center gap-2 bg-green-700/20 border border-green-700/30 hover:border-green-600/50 text-green-300 text-xs font-semibold px-3 py-2 rounded-xl transition-all mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 01.75.75v11.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06l3.22 3.22V3a.75.75 0 01.75-.75zm-9 13.5a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clip-rule="evenodd"/></svg>
+        Install App
+        <span class="ml-auto text-[10px] text-green-500 font-normal">Android · iOS · Desktop</span>
+      </button>
+    </div>
+
+    <!-- User -->
+    <div class="px-3 pb-3 border-t border-white/5 pt-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-green-700/40 border border-green-700/30 flex items-center justify-center text-green-300 font-bold text-sm shrink-0" id="user-avatar">U</div>
+        <div class="min-w-0 flex-1">
+          <div id="user-name" class="text-xs font-semibold text-white truncate">User</div>
+          <div id="user-email" class="text-[10px] text-gray-500 truncate"></div>
+        </div>
+        <span id="plan-badge" class="plan-badge text-white shrink-0" style="background:#064e34">FREE</span>
+        <button id="logout-btn" title="Sign out" class="text-gray-600 hover:text-red-400 transition-colors shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN AREA ─────────────────────────────────────────── -->
+  <main class="flex-1 flex flex-col min-w-0 bg-[#0f1117]">
+
+    <!-- Topbar -->
+    <header class="flex items-center justify-between px-4 py-3 border-b border-white/5 shrink-0 bg-[#0f1117]/80 backdrop-blur-sm">
+      <div class="flex items-center gap-3">
+        <button id="sidebar-toggle" class="lg:hidden text-gray-400 hover:text-white" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebar-overlay').classList.toggle('hidden')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h1 id="chat-title" class="text-sm font-semibold text-gray-100 truncate max-w-xs">Maa Grace AI</h1>
+      </div>
+      <!-- Export buttons -->
+      <div id="chat-area-controls" class="flex items-center gap-1.5">
+        <button id="export-pdf" title="Export PDF" class="p-2 rounded-lg text-gray-500 hover:text-gray-200 hover:bg-white/5 transition-all text-xs">PDF</button>
+        <button id="export-xls" title="Export Excel" class="p-2 rounded-lg text-gray-500 hover:text-gray-200 hover:bg-white/5 transition-all text-xs">XLS</button>
+        <button id="export-txt" title="Export Text" class="p-2 rounded-lg text-gray-500 hover:text-gray-200 hover:bg-white/5 transition-all text-xs">TXT</button>
+      </div>
+    </header>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <img src="/logo192.png" class="w-20 h-20 rounded-2xl mb-6 opacity-90" alt="Maa Grace AI"/>
+      <h2 class="text-2xl font-bold text-white mb-2">Hello! I'm Maa Grace AI</h2>
+      <p class="text-gray-400 text-sm max-w-sm mb-8">Your intelligent assistant powered by AmanTech. Ask me anything — from education to daily life in Ghana.</p>
+      <div class="grid grid-cols-2 gap-3 max-w-sm w-full">
+        <button onclick="document.getElementById('composer-input').value='Write a lesson plan for JHS 2 Science on photosynthesis';document.getElementById('composer-input').dispatchEvent(new Event('input'));document.getElementById('composer-input').focus()"
+          class="text-left p-3 rounded-xl bg-white/4 border border-white/8 hover:border-green-700/40 hover:bg-green-900/10 transition-all text-xs text-gray-300">
+          📚 Lesson plan for JHS 2 Science
+        </button>
+        <button onclick="document.getElementById('composer-input').value='Explain compound interest in simple terms';document.getElementById('composer-input').dispatchEvent(new Event('input'));document.getElementById('composer-input').focus()"
+          class="text-left p-3 rounded-xl bg-white/4 border border-white/8 hover:border-green-700/40 hover:bg-green-900/10 transition-all text-xs text-gray-300">
+          💰 Explain compound interest
+        </button>
+        <button onclick="document.getElementById('composer-input').value='Write 10 BECE multiple choice questions on Social Studies';document.getElementById('composer-input').dispatchEvent(new Event('input'));document.getElementById('composer-input').focus()"
+          class="text-left p-3 rounded-xl bg-white/4 border border-white/8 hover:border-green-700/40 hover:bg-green-900/10 transition-all text-xs text-gray-300">
+          📝 BECE Social Studies questions
+        </button>
+        <button onclick="document.getElementById('composer-input').value='Translate this to Twi: Good morning, how are you?';document.getElementById('composer-input').dispatchEvent(new Event('input'));document.getElementById('composer-input').focus()"
+          class="text-left p-3 rounded-xl bg-white/4 border border-white/8 hover:border-green-700/40 hover:bg-green-900/10 transition-all text-xs text-gray-300">
+          🇬🇭 Translate to Twi
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div id="chat-area" class="hidden flex-1 flex flex-col min-h-0">
+      <div id="messages" class="flex-1 overflow-y-auto px-4 py-4 space-y-1"></div>
+    </div>
+
+    <!-- Recording Indicator -->
+    <div id="recording-indicator" class="hidden shrink-0 px-4 py-2 bg-red-900/20 border-t border-red-700/20">
+      <div class="flex items-center gap-2 text-red-400 text-xs">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+        Recording — <span id="record-timer">00:00</span> — speak clearly, then press mic to stop
+      </div>
+    </div>
+
+    <!-- Image Previews -->
+    <div id="image-previews" class="hidden shrink-0 px-4 py-2 flex gap-2 flex-wrap border-t border-white/5"></div>
+
+    <!-- Composer -->
+    <div class="shrink-0 px-3 pb-3 pt-2">
+      <div id="composer-area" class="px-4 py-3">
+        <!-- Toolbar -->
+        <div class="flex items-center gap-1 mb-2">
+          <button id="attach-btn" title="Attach images" class="p-1.5 rounded-lg text-gray-500 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+          </button>
+          <button id="pexels-btn" title="Search images (Pexels)" class="p-1.5 rounded-lg text-gray-500 hover:text-gray-200 hover:bg-white/5 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+          </button>
+          <button id="generate-img-btn" title="Generate AI image" class="p-1.5 rounded-lg text-gray-500 hover:text-gold-400 hover:bg-white/5 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+          </button>
+          <input type="file" id="file-input" accept="image/*" multiple class="hidden"/>
+          <span class="flex-1"></span>
+          <span class="text-xs text-gray-600">Shift+Enter = new line</span>
+        </div>
+        <!-- Input Row -->
+        <div class="flex items-end gap-2">
+          <textarea id="msg-input" rows="1" placeholder="Ask Maa Grace anything…" class="flex-1 max-h-44 leading-relaxed py-1"></textarea>
+          <div class="flex items-center gap-1.5 shrink-0 pb-0.5">
+            <button id="voice-btn" title="Voice input"
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 border border-white/8 text-gray-400 hover:text-white hover:border-green-700/50 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z"/><path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z"/></svg>
+            </button>
+            <button id="send-btn"
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-green-700 hover:bg-green-600 text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-[10px] text-gray-700 mt-1.5">Maa Grace AI can make mistakes. Verify important info.</p>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- Image Preview Modal -->
+<div id="img-preview-modal" data-modal class="hidden fixed inset-0 z-50 items-center justify-center bg-black/80 p-4">
+  <div class="relative max-w-3xl w-full">
+    <button id="img-preview-close" onclick="UI.closeModal('img-preview-modal')" class="absolute -top-10 right-0 text-white/60 hover:text-white text-3xl leading-none">×</button>
+    <img id="img-preview-src" src="" alt="Preview" class="w-full rounded-2xl shadow-2xl max-h-[80vh] object-contain"/>
+  </div>
+</div>
+
+<!-- Image Search Modal -->
+<div id="image-search-modal" data-modal class="hidden fixed inset-0 z-50 items-center justify-center bg-black/70 p-4">
+  <div class="bg-[#161b22] border border-white/8 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[85vh] flex flex-col">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/5 shrink-0">
+      <h3 class="font-semibold text-sm">Search Images (Pexels)</h3>
+      <button id="pexels-close" onclick="UI.closeModal('image-search-modal')" class="text-gray-500 hover:text-white text-2xl leading-none">×</button>
+    </div>
+    <div class="px-4 py-3 border-b border-white/5 shrink-0 flex gap-2">
+      <input id="pexels-input" type="text" placeholder="Search for images…"
+        class="flex-1 bg-[#0f1117] border border-white/8 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-green-700/60"/>
+      <button id="pexels-search-btn" class="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all">Search</button>
+    </div>
+    <div id="pexels-results" class="flex-1 overflow-y-auto p-4 grid grid-cols-3 gap-2 auto-rows-max">
+      <div class="col-span-3 text-center text-gray-500 py-12 text-sm">Search for images to attach to your message</div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Gen Modal -->
+<div id="image-gen-modal" data-modal class="hidden fixed inset-0 z-50 items-center justify-center bg-black/70 p-4">
+  <div class="bg-[#161b22] border border-white/8 rounded-2xl w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+      <h3 class="font-semibold text-sm">✨ Generate AI Image</h3>
+      <button onclick="UI.closeModal('image-gen-modal')" class="text-gray-500 hover:text-white text-2xl leading-none">×</button>
+    </div>
+    <div class="p-5 space-y-4">
+      <div>
+        <label class="text-xs text-gray-400 mb-1.5 block">Describe the image you want</label>
+        <textarea id="image-gen-prompt" rows="3" placeholder="A beautiful Ghanaian marketplace at sunset, vibrant colors, people selling fruits…"
+          class="w-full bg-[#0f1117] border border-white/8 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-700/60 resize-none text-gray-100 placeholder-gray-600"></textarea>
+      </div>
+      <div id="image-gen-preview" class="min-h-16"></div>
+      <button id="image-gen-submit" class="w-full bg-green-700 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-all text-sm">
+        Generate Image
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Plans Modal -->
+<div id="plans-modal" data-modal class="hidden fixed inset-0 z-50 items-center justify-center bg-black/70 p-4">
+  <div class="bg-[#161b22] border border-white/8 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+      <h3 class="font-semibold">⚡ Upgrade Your Plan</h3>
+      <button onclick="UI.closeModal('plans-modal')" class="text-gray-500 hover:text-white text-2xl leading-none">×</button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Free -->
+      <div class="border border-white/8 rounded-2xl p-4">
+        <div class="text-xs font-bold text-gray-400 uppercase mb-1">Free</div>
+        <div class="text-2xl font-bold text-white mb-3">GHS 0</div>
+        <ul class="space-y-1.5 text-xs text-gray-400 mb-4">
+          <li>✓ 10 messages/day</li><li>✓ 3 image generations</li><li>✓ 10 image searches</li>
+        </ul>
+        <button data-plan="free" class="w-full border border-white/10 text-gray-400 py-2 rounded-xl text-sm">Current</button>
+      </div>
+      <!-- Basic -->
+      <div class="border border-green-700/40 rounded-2xl p-4 bg-green-900/10">
+        <div class="text-xs font-bold text-green-400 uppercase mb-1">Basic</div>
+        <div class="text-2xl font-bold text-white mb-3">GHS 15 <span class="text-sm font-normal text-gray-400">/month</span></div>
+        <ul class="space-y-1.5 text-xs text-gray-300 mb-4">
+          <li>✓ 100 messages/day</li><li>✓ 30 image generations</li><li>✓ 100 image searches</li><li>✓ PDF/DOCX export</li>
+        </ul>
+        <button data-plan="basic" class="w-full bg-green-700 hover:bg-green-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-all">Get Basic</button>
+      </div>
+      <!-- Pro -->
+      <div class="border border-yellow-600/40 rounded-2xl p-4 bg-yellow-900/5 relative">
+        <span class="absolute -top-2.5 left-4 bg-yellow-600 text-black text-[10px] font-bold px-2 py-0.5 rounded-full">POPULAR</span>
+        <div class="text-xs font-bold text-yellow-400 uppercase mb-1">Pro</div>
+        <div class="text-2xl font-bold text-white mb-3">GHS 35 <span class="text-sm font-normal text-gray-400">/month</span></div>
+        <ul class="space-y-1.5 text-xs text-gray-300 mb-4">
+          <li>✓ 500 messages/day</li><li>✓ 100 image generations</li><li>✓ Voice transcription</li><li>✓ All exports</li>
+        </ul>
+        <button data-plan="pro" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2.5 rounded-xl text-sm transition-all">Get Pro</button>
+      </div>
+      <!-- Premium -->
+      <div class="border border-purple-600/40 rounded-2xl p-4 bg-purple-900/5">
+        <div class="text-xs font-bold text-purple-400 uppercase mb-1">Premium</div>
+        <div class="text-2xl font-bold text-white mb-3">GHS 80 <span class="text-sm font-normal text-gray-400">/month</span></div>
+        <ul class="space-y-1.5 text-xs text-gray-300 mb-4">
+          <li>✓ Unlimited messages</li><li>✓ Unlimited image gen</li><li>✓ Priority AI</li><li>✓ All features</li>
+        </ul>
+        <button data-plan="premium" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 rounded-xl text-sm transition-all">Get Premium</button>
+      </div>
+    </div>
+    <div class="px-5 pb-5 text-center text-xs text-gray-600">Payments powered by Paystack · Mobile Money & Cards accepted</div>
+  </div>
+</div>
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<!-- Parse SDK -->
+<script src="https://unpkg.com/parse/dist/parse.min.js"></script>
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Paystack -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<!-- App scripts (order matters) -->
+<script src="/js/config.js"></script>
+<script src="/js/utils/constants.js"></script>
+<script src="/js/utils/dom.js"></script>
+<script src="/js/utils/helpers.js"></script>
+<script src="/js/services/api.js"></script>
+<script src="/js/modules/ui.js"></script>
+<script src="/js/modules/chat.js"></script>
+<script src="/js/modules/composer.js"></script>
+<script src="/js/modules/images.js"></script>
+<script src="/js/modules/voice.js"></script>
+<script src="/js/services/payments.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/register-sw.js"></script>
+
+</body>
+</html>

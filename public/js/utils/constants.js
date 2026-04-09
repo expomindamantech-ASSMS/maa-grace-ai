@@ -1,0 +1,9 @@
+'use strict';
+
+window.CONSTANTS = {
+  MAX_IMAGES: 4,
+  MAX_IMG_MB: 5,
+  STREAM_DELAY_MS: 18,
+  TOAST_DURATION: 3500,
+  DELETE_CONFIRM_MS: 8000,
+};

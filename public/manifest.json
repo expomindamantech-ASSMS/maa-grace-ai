@@ -1,0 +1,19 @@
+{
+  "short_name": "Maa Grace AI",
+  "name": "Maa Grace AI – AmanTech",
+  "description": "Intelligent AI assistant powered by AmanTech for Ghana and West Africa",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" },
+    { "src": "/logo192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable" },
+    { "src": "/logo512.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0d6e4a",
+  "background_color": "#0f1117",
+  "categories": ["productivity", "education"],
+  "lang": "en-GH"
+}

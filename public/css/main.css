@@ -1,0 +1,54 @@
+/* Maa Grace AI — custom styles on top of Tailwind */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0f1117;
+  color: #e2e8f0;
+  margin: 0;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* scrollbar */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: #374151; border-radius: 4px; }
+
+/* streaming cursor blink */
+.streaming-cursor {
+  display: inline-block;
+  animation: blink 0.7s steps(1) infinite;
+  color: #10b981;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* code blocks */
+pre { background: #1a1f2e; border-radius: 10px; padding: 12px; overflow-x: auto; font-size: 0.8rem; }
+code { font-family: 'Fira Code', monospace; font-size: 0.82rem; }
+
+/* smooth transitions */
+#sidebar    { transition: transform 0.3s ease; }
+.thread-item { transition: background 0.15s; }
+
+/* gold accent */
+.gold  { color: #f59e0b; }
+.gold-bg { background: #f59e0b; }
+
+/* PWA safe-area padding */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 12px); }
+.pt-safe { padding-top:    env(safe-area-inset-top, 0); }
+
+/* hide scrollbar on mobile sidebar */
+#thread-list { scrollbar-width: thin; }
+
+/* message images */
+#messages img { max-width: 100%; border-radius: 12px; }
+
+/* auth card */
+.auth-card {
+  background: linear-gradient(145deg, #1a1f2e, #0f1117);
+  border: 1px solid #2d3748;
+}
